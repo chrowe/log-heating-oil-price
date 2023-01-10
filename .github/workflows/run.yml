@@ -27,10 +27,12 @@ jobs:
       run: pip install -r requirements.txt
     - name: Run script
       run: pytest search.py
-    - name: Save reslults
-      uses: actions/upload-artifact@v3
-      with:
-        name: csv
-        path: irving_oil_prices.csv
+    - name: Commit the update
+      run: |
+        git config --global user.email "chris.rowe@wri.org"
+        git config --global user.name "Github Actions"
+        git add irving_oil_prices.csv
+        git commit -m "Github actions run"
+        git push
 
 
