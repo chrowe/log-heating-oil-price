@@ -28,9 +28,9 @@ jobs:
     - name: Run script
       run: pytest search.py
     - name: Save reslults
-        uses: actions/upload-artifact@v3
-        with:
-          name: csv
-          path: irving_oil_prices.csv
+      uses: actions/upload-artifact@v3
+      with:
+        name: csv
+        path: irving_oil_prices.csv
 
 
