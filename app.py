@@ -24,10 +24,8 @@ import pandas as pd
 csv_file = 'https://raw.githubusercontent.com/chrowe/log-heating-oil-price/main/irving_oil_prices.csv'
 data = pd.read_csv(csv_file, parse_dates=['date'])
 
-data.dtypes
 
 # Graph
-from bokeh.io import show
 from bokeh.plotting import figure
 
 p = figure(x_axis_type="datetime", title="Oil Price", height=350, width=800)
