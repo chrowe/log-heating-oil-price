@@ -15,7 +15,7 @@ async function startApplication() {
   self.pyodide.globals.set("sendPatch", sendPatch);
   console.log("Loaded!");
   await self.pyodide.loadPackage("micropip");
-  const env_spec = ['https://cdn.holoviz.org/panel/0.14.2/dist/wheels/bokeh-2.4.3-py3-none-any.whl', 'https://cdn.holoviz.org/panel/0.14.2/dist/wheels/panel-0.14.2-py3-none-any.whl', 'pyodide-http==0.1.0', 'matplotlib', 'numpy', 'pandas']
+  const env_spec = ['https://cdn.holoviz.org/panel/0.14.2/dist/wheels/bokeh-2.4.3-py3-none-any.whl', 'https://cdn.holoviz.org/panel/0.14.2/dist/wheels/panel-0.14.2-py3-none-any.whl', 'pyodide-http==0.1.0', 'pandas']
   for (const pkg of env_spec) {
     let pkg_name;
     if (pkg.endsWith('.whl')) {
@@ -49,23 +49,48 @@ init_doc()
 
 import panel as pn
 
+# Page setup
 pn.extension(sizing_mode="stretch_width", template="fast")
 
+
+# Header
 pn.state.template.param.update(
-    site_url="https://awesome-panel.org",
-    site="Awesome Panel",
-    title="Hello World",
+    site_url="",
+    site="VSECU Oil Price",
+    title="Data",
 )
 
+
+# Intro
 pn.panel(
     "This is a log of the price of Irving Oil from [VSECU](https://www.vsecu.com/personal/home-heating/fuel-buying-program)"
 ).servable()
 
-import pandas as pd; import numpy as np; import matplotlib.pyplot as plt
+
+# Get data
+import pandas as pd
 
 csv_file = 'https://raw.githubusercontent.com/chrowe/log-heating-oil-price/main/irving_oil_prices.csv'
-data = pd.read_csv(csv_file, parse_dates=['date'], index_col='date')
+data = pd.read_csv(csv_file, parse_dates=['date'])
 
+
+# Graph
+from bokeh.plotting import figure
+
+p = figure(x_axis_type="datetime", title="Oil Price", height=350, width=800)
+p.xgrid.grid_line_color=None
+p.ygrid.grid_line_alpha=0.5
+p.xaxis.axis_label = 'Day'
+p.yaxis.axis_label = 'Price'
+
+p.line(data.date, data.price)
+
+pn.panel(
+    p
+).servable()
+
+
+# Table
 pn.panel(
     data
 ).servable()
