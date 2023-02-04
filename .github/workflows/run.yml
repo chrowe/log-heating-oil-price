@@ -18,15 +18,14 @@ jobs:
         python-version: '3.9'
     - name: Upgrade pip
       run: python -m pip install --upgrade pip
-    - name: Install pytest
-      run: |
-        pip install pytest-playwright
-        playwright install-deps
-        playwright install
     - name: Install python dependencies
       run: pip install -r requirements.txt
+    - name: Setup playwright
+      run: |
+        playwright install-deps
+        playwright install firefox
     - name: Run script
-      run: pytest search.py
+      run: pytest --browser=firefox search.py
     - name: Commit the update
       run: |
         git config --global user.email "chris.rowe@wri.org"
