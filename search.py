@@ -27,7 +27,7 @@ def test_search_button_exists(page: Page):
     expect(search_button).to_have_attribute("type", "submit")
     
     
-    page.locator("#js-announcements_bank").get_by_role("button").click()
+    #page.locator("#js-announcements_bank").get_by_role("button").click()
 
     page.get_by_label("Zip Code").fill("05048")
 
