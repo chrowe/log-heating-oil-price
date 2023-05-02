@@ -1,7 +1,7 @@
 # log-heating-oil-price
 This repo does 2 things
 1. Gets Irving VSECU heating oil prices and stores them in a csv.
-2. Generates a website hosted on Github pages to visualize the data.
+2. Generates a website hosted on Github pages to visualize the data. (based on [this article](https://towardsdatascience.com/how-to-deploy-a-panel-visualization-dashboard-to-github-pages-2f520fd8660))
 
 
 ## Requirements
@@ -29,4 +29,15 @@ panel serve index.py --show --autoreload
 Test Github action locally
 ```
 act --container-architecture linux/amd64 workflow_dispatch
+```
+
+## Deploy
+### Data
+Github actions
+
+### Website
+```
+panel convert index.py --to pyodide-worker --pwa --title "VSECU Oil Price" --out docs
+git add docs/*
+git commit -m 'Deploy website'
 ```
