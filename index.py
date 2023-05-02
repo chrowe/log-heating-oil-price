@@ -19,11 +19,11 @@ pn.panel(
 
 
 # Get data
-import pandas as pd
+from pandas import read_csv
 from bokeh.models import ColumnDataSource
 
 csv_file = 'https://raw.githubusercontent.com/chrowe/log-heating-oil-price/main/irving_oil_prices.csv'
-data = pd.read_csv(csv_file, parse_dates=['date']).sort_values(by=['date'], ascending=False)
+data = read_csv(csv_file, parse_dates=['date']).sort_values(by=['date'], ascending=False)
 
 
 # Graph
