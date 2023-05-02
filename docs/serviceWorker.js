@@ -1,5 +1,5 @@
-const appName = 'Panel Pyodide App'
-const appCacheName = 'Panel Pyodide App-056d6b3e8bd14f3f8994a53cc51bcc8a';
+const appName = 'VSECU Oil Price'
+const appCacheName = 'VSECU Oil Price-37c492b1082640cf8c1ddd0976418ba2';
 
 const preCacheFiles = ['images/favicon.ico', 'images/icon-vector.svg', 'images/icon-32x32.png', 'images/icon-192x192.png', 'images/icon-512x512.png', 'images/apple-touch-icon.png', 'images/index_background.png'];
 
