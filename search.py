@@ -11,7 +11,7 @@ from datetime import date
 from csv import writer
 
 
-url = 'https://www.vsecu.com/personal/home-heating/fuel-buying-program/#dealer'
+url = 'https://www.vsecu.com/personal/home-heating/fuel-buying-program'
 
 
     
