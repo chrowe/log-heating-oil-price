@@ -66,7 +66,12 @@
 </div>
 
 ```js
-const oil = FileAttachment("data/oil.csv").csv({typed: true});
+const oil = d3.csvParse(await fetch("https://raw.githubusercontent.com/chrowe/log-heating-oil-price/main/irving_oil_prices.csv").then(response => response.text()));
+
+oil.forEach(row => {
+  row.date = new Date(row.date);
+  row.price = +row.price;
+});
 ```
 
 ---
