@@ -43,7 +43,18 @@
 <div class="hero">
   <h1>VSECU Oil Price</h1>
   <h2>This is a log of the price of Irving Oil from VSECU</h2>
-  <a href="https://www.vsecu.com/personal/home-heating/fuel-buying-program" target="_blank">See details<span style="display: inline-block; margin-left: 0.25rem;">↗︎</span></a>
+  <a href="https://www.vsecu.com/personal/home-heating/fuel-buying-program" target="_blank">Source<span style="display: inline-block; margin-left: 0.25rem;">↗︎</span></a>
+</div>
+
+<div class="grid grid-cols-4">
+  <div class="card">
+    <h2>Current price</h2>
+    <p><span class="big">$${currentPriceRow.price}</span> on ${currentPriceRow.date}</p>
+  </div>
+  <div class="card">
+    <h2>Lowest price ever</h2>
+    <p><span class="big">$${minPriceRow.price}</span> on ${minPriceRow.date}</p>
+  </div>
 </div>
 
 <div class="grid grid-cols-1" style="grid-auto-rows: 504px;">
@@ -69,9 +80,12 @@
 const oil = d3.csvParse(await fetch("https://raw.githubusercontent.com/chrowe/log-heating-oil-price/main/irving_oil_prices.csv").then(response => response.text()));
 
 oil.forEach(row => {
-  row.date = new Date(row.date);
-  row.price = +row.price;
+  row.price = Math.round(row.price * 100) / 100;
 });
+
+let currentPriceRow = oil[oil.length - 1];
+let minPriceRow = oil[d3.minIndex(oil, d => d.price)];
+let maxPriceRow = oil[d3.maxIndex(oil, d => d.price)];
 ```
 
 ---
