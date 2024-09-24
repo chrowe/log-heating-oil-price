@@ -11,7 +11,7 @@ from datetime import date
 from csv import writer
 
 
-url = 'https://www.vsecu.com/personal/home-heating/fuel-buying-program'
+url = 'https://www.eastrise.com/personal/fuel-buying-program/'
 
 
     
@@ -31,14 +31,12 @@ def test_search_button_exists(page: Page):
 
     page.get_by_label("Zip Code").fill("05048")
 
-    page.get_by_role("group", name="Fuel Type(s)").get_by_text("propane").click()
-    page.get_by_role("group", name="Fuel Type(s)").get_by_text("kerosene").click()
-    page.get_by_role("group", name="Fuel Type(s)").get_by_text("wood pellets").click()
+    page.get_by_role("group", name="Fuel Type(s)").get_by_text("oil").click()
     
     search_button.click()
     
 
-    value = page.locator("#vheat-find-a-dealer-root > div > div > div:nth-child(2) > div.co-dealer--pricing > table > tbody > tr > td:nth-child(3)")
+    value = page.locator("#vheat-find-a-dealer-root > div > div > div > div:nth-child(1) > div.co-dealer--pricing > table > tbody > tr > td:nth-child(3)")
 
     print(value.inner_text())
     print(date.today())
