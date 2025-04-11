@@ -34,9 +34,8 @@ panel serve index.py --show --autoreload
 
 Test Github action locally
 ```
-act --container-architecture linux/amd64 workflow_dispatch
+act -s GITHUB_TOKEN="$(gh auth token)" workflow_dispatch
 ```
-note: `--container-architecture linux/amd64` is only needed if you are running on an M1 Mac.
 
 ## Deploy
 ### Data
