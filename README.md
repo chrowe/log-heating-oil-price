@@ -19,10 +19,10 @@ This repo does 3 things
 ## Running locally
 Get data
 ```
-conda install python3.9 playwright==1.29.1 pytest-playwright==0.3.0
-playwright install-deps
-playwright install firefox
-pytest --browser=firefox search.py
+uv sync
+source .venv/bin/activate
+playwright install-deps webkit
+pytest --browser=webkit search.py
 ```
 
 Run website
