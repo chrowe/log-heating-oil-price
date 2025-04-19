@@ -66,7 +66,7 @@
       y: {grid: true, label: "$"},
       marks: [
         Plot.ruleY([0]),
-        Plot.lineY(oil, {x: "date", y: "price", tip: true})
+        Plot.lineY(filteredOil, {x: "date", y: "price", tip: true})
       ]
     }))
   }</div>
@@ -86,6 +86,19 @@ oil.forEach(row => {
 let currentPriceRow = oil[oil.length - 1];
 let minPriceRow = oil[d3.minIndex(oil, d => d.price)];
 let maxPriceRow = oil[d3.maxIndex(oil, d => d.price)];
+
+const dateSlider = Inputs.date({
+  label: "Start Date",
+  min: new Date(d3.min(oil, d => d.date)),
+  max: new Date(d3.max(oil, d => d.date)),
+  value: new Date(d3.min(oil, d => d.date))
+});
+
+const filteredOil = oil.filter(d => new Date(d.date) >= dateSlider.value);
+
+dateSlider.addEventListener("input", () => {
+  filteredOil = oil.filter(d => new Date(d.date) >= dateSlider.value);
+});
 ```
 
 ---
