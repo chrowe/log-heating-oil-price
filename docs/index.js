@@ -1,4 +1,5 @@
 importScripts("https://cdn.jsdelivr.net/pyodide/v0.21.3/full/pyodide.js");
+import { Inputs } from "@observablehq/inputs";
 
 function sendPatch(patch, buffers, msg_id) {
   self.postMessage({
@@ -48,6 +49,10 @@ from panel.io.pyodide import init_doc, write_doc
 init_doc()
 
 import panel as pn
+from bokeh.models import ColumnDataSource
+from bokeh.plotting import figure
+from bokeh.layouts import column
+from bokeh.models import DateRangeSlider
 
 # Page setup
 pn.extension(sizing_mode="stretch_width", template="fast")
@@ -68,41 +73,49 @@ pn.panel(
 
 
 # Get data
-from pandas import read_csv
-from bokeh.models import ColumnDataSource
+import pandas as pd
 
 csv_file = 'https://raw.githubusercontent.com/chrowe/log-heating-oil-price/main/irving_oil_prices.csv'
-data = read_csv(csv_file, parse_dates=['date']).sort_values(by=['date'], ascending=False)
+data = pd.read_csv(csv_file, parse_dates=['date'])
 
+# Date Slider
+date_slider = Inputs.date({
+  label: "Start Date",
+  min: new Date(data['date'].min()),
+  max: new Date(data['date'].max()),
+  value: new Date(data['date'].min())
+})
+
+# Filtered data
+filtered_data = data[data['date'] >= date_slider.value]
 
 # Graph
-from bokeh.plotting import figure
-
-TOOLTIPS = [
-    ("Date", "@date{%F}"),
-    ("Price", "$@price"),
-]
-
-source = ColumnDataSource(data)
-
-p = figure(x_axis_type="datetime", title="Oil Price", height=350, width=800, tooltips=TOOLTIPS)
+source = ColumnDataSource(filtered_data)
+p = figure(x_axis_type="datetime", title="Oil Price", height=350, width=800)
 p.xgrid.grid_line_color=None
 p.ygrid.grid_line_alpha=0.5
 p.xaxis.axis_label = 'Day'
 p.yaxis.axis_label = 'Price'
-p.hover.formatters = { "@date": "datetime"}
 
-p.line(x='date', y='price', source=source)
+p.line('date', 'price', source=source)
+
+# Update function
+def update_data(event):
+    filtered_data = data[data['date'] >= event.new]
+    source.data = ColumnDataSource(filtered_data).data
+
+date_slider.addEventListener("input", update_data)
+
+layout = column(date_slider, p)
 
 pn.panel(
-    p
+    layout
 ).servable()
 
-table = pn.widgets.DataFrame(data, name='Table')
 
 # Table
 pn.panel(
-    table
+    data
 ).servable()
     
 
