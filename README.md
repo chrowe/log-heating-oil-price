@@ -37,6 +37,20 @@ Test Github action locally
 act -s GITHUB_TOKEN="$(gh auth token)" workflow_dispatch
 ```
 
+## Daily phone notifications
+The daily Github Action can send the current price and change over the last 1, 7 and 30 days to your phone using [ntfy](https://ntfy.sh).
+
+1. Install the ntfy app ([Android](https://play.google.com/store/apps/details?id=io.heckel.ntfy) / [iOS](https://apps.apple.com/us/app/ntfy/id1625396347)) and subscribe to a hard-to-guess topic name, e.g. `oil-price-8f3k2x9q`. Anyone who knows the topic name can read it, so treat it like a password.
+2. In the repo go to Settings → Secrets and variables → Actions and add a secret `NTFY_TOPIC` with that name.
+3. Run the workflow manually (Actions → Run script → Run workflow) to test.
+
+To turn notifications off, delete the `NTFY_TOPIC` secret. Optionally add `NTFY_TOKEN` if you use a reserved topic or self-hosted server.
+
+Preview the message locally
+```
+python notify.py --dry-run
+```
+
 ## Deploy
 ### Data
 Data is updated via Github actions. See `.github/workflows/run.yml`
