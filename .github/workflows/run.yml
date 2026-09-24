@@ -9,6 +9,10 @@ jobs:
   run:
     name: run-script
     runs-on: ubuntu-latest
+    env:
+      # Daily phone notification via ntfy. Unset the secret to turn it off.
+      NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+      NTFY_TOKEN: ${{ secrets.NTFY_TOKEN }}
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -34,5 +38,6 @@ jobs:
         git add irving_oil_prices.csv
         git commit -m "Github actions run"
         git push
-
-
+    - name: Send ntfy notification
+      if: ${{ env.NTFY_TOPIC != '' }}
+      run: uv run python notify.py

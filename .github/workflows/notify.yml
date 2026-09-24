@@ -1,0 +1,25 @@
+name: Send notification
+
+# Sends today's ntfy notification without scraping. Runs on demand, and on
+# PRs that change the notifier so they get a real test send.
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - notify.py
+      - .github/workflows/notify.yml
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    env:
+      NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+      NTFY_TOKEN: ${{ secrets.NTFY_TOKEN }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Preview message
+      run: python3 notify.py --dry-run
+    - name: Send ntfy notification
+      if: ${{ env.NTFY_TOPIC != '' }}
+      run: python3 notify.py
