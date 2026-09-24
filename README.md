@@ -44,6 +44,8 @@ The daily Github Action can send the current price and change over the last 1, 7
 2. In the repo go to Settings → Secrets and variables → Actions and add a secret `NTFY_TOPIC` with that name.
 3. Run the workflow manually (Actions → Run script → Run workflow) to test.
 
+To resend today's notification without scraping, use Actions → Send notification → Run workflow.
+
 To turn notifications off, delete the `NTFY_TOPIC` secret. Optionally add `NTFY_TOKEN` if you use a reserved topic or self-hosted server.
 
 Preview the message locally
