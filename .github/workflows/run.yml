@@ -35,7 +35,7 @@ jobs:
       run: |
         git config --global user.email "chris.rowe@wri.org"
         git config --global user.name "Github Actions"
-        git add irving_oil_prices.csv
+        git add irving_oil_prices.csv oil_prices_by_dealer.csv
         git commit -m "Github actions run"
         git push
     - name: Send ntfy notification
