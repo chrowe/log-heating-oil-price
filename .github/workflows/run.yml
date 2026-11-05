@@ -8,7 +8,9 @@ on:
 jobs:
   run:
     name: run-script
-    runs-on: ubuntu-latest
+    # Pinned: the locked Playwright can't install webkit on ubuntu-26.04, which
+    # ubuntu-latest now resolves to. Upgrade Playwright before moving this.
+    runs-on: ubuntu-24.04
     env:
       # Daily phone notification via ntfy. Unset the secret to turn it off.
       NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
