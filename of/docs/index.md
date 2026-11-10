@@ -49,16 +49,16 @@
 <div class="grid grid-cols-4">
   <div class="card">
     <h2>Current price</h2>
-    <p><span class="big">$${currentPriceRow.price}</span> on ${currentPriceRow.date}</p>
+    <p><span class="big">$${currentPriceRow.price}</span> on ${formatDate(currentPriceRow.date)}</p>
   </div>
   <div class="card">
     <h2>Lowest price ever</h2>
-    <p><span class="big">$${minPriceRow.price}</span> on ${minPriceRow.date}</p>
+    <p><span class="big">$${minPriceRow.price}</span> on ${formatDate(minPriceRow.date)}</p>
   </div>
 </div>
 
 <div class="grid grid-cols-1" style="grid-auto-rows: 504px;">
-  <div class="card">${
+  <div class="card">${startDateInput}${
     resize((width) => Plot.plot({
       title: "Irving heating oil",
       subtitle: "price over time",
@@ -66,7 +66,7 @@
       y: {grid: true, label: "$"},
       marks: [
         Plot.ruleY([0]),
-        Plot.lineY(oil, {x: "date", y: "price", tip: true})
+        Plot.lineY(filteredOil, {x: "date", y: "price", tip: true})
       ]
     }))
   }</div>
@@ -77,15 +77,33 @@
 </div>
 
 ```js
-const oil = d3.csvParse(await fetch("https://raw.githubusercontent.com/chrowe/log-heating-oil-price/main/irving_oil_prices.csv").then(response => response.text()));
+// Dates are "YYYY-MM-DD" strings. Parse them as UTC midnight and always format
+// them in UTC, so they don't show up a day early in US time zones.
+const parseDate = d3.utcParse("%Y-%m-%d");
+const formatDate = d3.utcFormat("%Y-%m-%d");
 
-oil.forEach(row => {
-  row.price = Math.round(row.price * 100) / 100;
+const oil = d3.csvParse(
+  await fetch("https://raw.githubusercontent.com/chrowe/log-heating-oil-price/main/irving_oil_prices.csv").then(response => response.text()),
+  row => ({date: parseDate(row.date), price: Math.round(row.price * 100) / 100})
+);
+
+const currentPriceRow = oil[oil.length - 1];
+const minPriceRow = oil[d3.minIndex(oil, d => d.price)];
+```
+
+```js
+const startDateInput = Inputs.date({
+  label: "Start date",
+  min: oil[0].date,
+  max: currentPriceRow.date,
+  value: oil[0].date
 });
+const startDate = Generators.input(startDateInput);
+```
 
-let currentPriceRow = oil[oil.length - 1];
-let minPriceRow = oil[d3.minIndex(oil, d => d.price)];
-let maxPriceRow = oil[d3.maxIndex(oil, d => d.price)];
+```js
+// Inputs.date gives null while the field is cleared; show everything then.
+const filteredOil = oil.filter(d => d.date >= (startDate ?? oil[0].date));
 ```
 
 ---
