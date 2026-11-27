@@ -4,7 +4,12 @@ Notes for AI coding agents working in this repo. See README.md for what the proj
 
 ## What this is for
 
-A personal tool for tracking the price of heating oil for my home. It scrapes Irving's price (and other dealers' prices) from the Eastrise fuel buying program daily, shows the history on a website, and sends a daily phone notification with the price and how it has changed. It's also a project for learning new tools (it started as a way to learn Python, and the site moved to Observable Framework partly to try it out).
+A personal tool for buying heating oil at the best price. Every day it scrapes dealer prices from the Eastrise fuel buying program, shows the history on a website, and sends a phone notification with the price and how it has changed.
+
+- **Main decision: when to buy oil for my house** (zip 05048, currently from Irving) to get the cheapest price.
+- **Second decision: which dealer to use.** My partner lives in 05602 and uses a different dealer, not Irving. That's why the scraper records every dealer in both zip codes: so each of us can compare our options, and compare the two areas.
+- **Users:** just me and my partner.
+- **Also for fun:** I like knowing the numbers and playing with the data, and the project is a way to learn new tools (it started as a way to learn Python, and the site moved to Observable Framework partly to try it out).
 
 ## How I like to work
 
