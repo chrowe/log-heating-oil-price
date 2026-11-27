@@ -32,7 +32,8 @@ jobs:
       run: |
         uv run playwright install --with-deps webkit
     - name: Run script
-      run: uv run pytest --browser=webkit search.py
+      # Retry a failed zip code (e.g. a slow page load, #48) before giving up.
+      run: uv run pytest --browser=webkit --reruns 2 --reruns-delay 30 search.py
     - name: Commit the update
       run: |
         git config --global user.email "chris.rowe@wri.org"
