@@ -19,6 +19,7 @@ A personal tool for buying heating oil at the best price. Every day it scrapes d
   - If there's a better or simpler way to meet the need than what I asked for, suggest it, and explain the trade-off. Don't treat my request as the spec.
 - **Use existing tools first.** Before building something, check for an open source tool that already does it and suggest that. I'd rather contribute to an existing project than start a new one.
 - **Ask before outward-facing actions I didn't request**, such as closing issues, commenting, or merging. Once I say yes, do it without asking again.
+- **Check the roadmap for priorities.** [#41](https://github.com/chrowe/log-heating-oil-price/issues/41) sets the order of work. Fetch the current list of open issues before suggesting new ones, since issues are often added between sessions.
 - **Every PR starts from an issue.** When I ask for a change, don't go straight to a PR. First look for an open issue that covers the work.
   - If there is one, check it says what will be done and how to test it, and suggest updates if it doesn't.
   - If there isn't one, recommend creating one, with a draft I can approve, before writing code.
