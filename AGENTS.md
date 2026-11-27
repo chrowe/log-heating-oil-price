@@ -60,6 +60,7 @@ Use GitHub's issue statuses ([announcement](https://github.blog/changelog/2026-1
 - `search.py`: Playwright scraper, run as a pytest test (`test_scrape_prices`), one run per zip code. Source: https://www.eastrise.com/personal/fuel-buying-program/ (Eastrise was formerly VSECU).
 - `irving_oil_prices.csv`, `oil_prices_by_dealer.csv`: data. GitHub Actions (`.github/workflows/run.yml`) appends to these and commits to `main` daily. Don't edit them by hand, and branch from the latest `main` to avoid CSV conflicts.
 - `notify.py`: daily ntfy phone notification. `.github/workflows/notify.yml` sends a real notification on PRs that change it.
+- `.github/workflows/claude-code-review.yml`: Claude reviews every non-draft PR and posts inline comments. Treat its findings like any other review: fix them or reply explaining why not. `.github/workflows/claude.yml` answers `@claude` mentions in issues and PRs. Both use the `CLAUDE_CODE_OAUTH_TOKEN` repo secret (#44).
 - `of/`: the website, an Observable Framework project. Cloudflare Pages builds it from `of/` (only changes under `of/` trigger a build).
   - Production: https://log-heating-oil-price.pages.dev/
   - Every branch gets a preview at `https://<branch-name-with-slashes-as-dashes>.log-heating-oil-price.pages.dev/`.
