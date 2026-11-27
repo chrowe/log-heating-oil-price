@@ -7,7 +7,8 @@ Created on Wed Jan  4 15:46:00 2023
 """
 
 from playwright.sync_api import Page, expect
-from datetime import date
+from datetime import date, datetime
+from zoneinfo import ZoneInfo
 from csv import writer
 import pytest
 
@@ -15,6 +16,13 @@ import pytest
 url = 'https://www.eastrise.com/personal/fuel-buying-program/'
 ZIP_CODES = ['05048', '05602']
 DEALER_CSV = 'oil_prices_by_dealer.csv'
+# Rows are dated by the dealers' local day, not the runner's UTC day (#14).
+LOCAL_TZ = ZoneInfo('America/New_York')
+
+
+def local_today(now: datetime | None = None) -> date:
+    """Today's date in Vermont. Pass an aware `now` to fix the clock in tests."""
+    return (now or datetime.now(LOCAL_TZ)).astimezone(LOCAL_TZ).date()
 
 
 @pytest.mark.parametrize('zip_code', ZIP_CODES)
@@ -34,7 +42,7 @@ def test_scrape_prices(page: Page, zip_code):
     dealers = page.locator("#vheat-find-a-dealer-root div.co-dealer")
     expect(dealers.first).to_be_visible()
 
-    today = date.today().strftime('%Y-%m-%d')
+    today = local_today().isoformat()
     rows = []
     for dealer in dealers.all():
         name = dealer.locator("h3.co-dealer--name").inner_text().strip()
