@@ -4,6 +4,8 @@ Send a daily heating oil price update to a phone via ntfy (https://ntfy.sh).
 
 Reads irving_oil_prices.csv and posts the latest price plus the change over
 the previous 1, 7 and 30 days to the ntfy topic in the NTFY_TOPIC env var.
+If scrape_log.csv says that day's prices came from the Playwright fallback,
+the message says so (#50).
 If NTFY_TOPIC is not set, nothing is sent.
 
 Optional env vars:
@@ -24,6 +26,7 @@ import urllib.request
 from datetime import date, timedelta
 
 CSV_FILE = 'irving_oil_prices.csv'
+SCRAPE_LOG = 'scrape_log.csv'
 DEFAULT_SITE_URL = 'https://log-heating-oil-price.pages.dev/'
 PERIODS = [(1, '1 day'), (7, '7 days'), (30, '30 days')]
 
@@ -33,6 +36,22 @@ def read_prices(path=CSV_FILE):
         rows = [(date.fromisoformat(r['date']), float(r['price']))
                 for r in csv.DictReader(f) if r.get('price')]
     return sorted(rows)
+
+
+def fallback_note(latest_day, path=SCRAPE_LOG):
+    """A line about the Playwright fallback if the scrape for `latest_day` used it."""
+    try:
+        with open(path, newline='') as f:
+            rows = list(csv.DictReader(f))
+    except FileNotFoundError:
+        return None
+    if not rows:
+        return None
+    last = rows[-1]
+    if last.get('source') != 'playwright' or last.get('date') != latest_day.isoformat():
+        return None
+    detail = last.get('detail')
+    return 'Prices came from the Playwright fallback' + (f' ({detail})' if detail else '')
 
 
 def price_on_or_before(rows, day):
@@ -111,7 +130,11 @@ def send(title, body, tag):
 
 
 def main(argv):
-    title, body, tag = build_message(read_prices())
+    rows = read_prices()
+    title, body, tag = build_message(rows)
+    note = fallback_note(rows[-1][0])
+    if note:
+        body = f'{body}\n{note}' if body else note
     if '--dry-run' in argv:
         print(title)
         print(body)
