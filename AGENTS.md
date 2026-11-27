@@ -57,7 +57,7 @@ Use GitHub's issue statuses ([announcement](https://github.blog/changelog/2026-1
 
 ## Repo layout
 
-- `search.py`: Playwright scraper, run as a pytest test (`test_search_button_exists`), one run per zip code. Source: https://www.eastrise.com/personal/fuel-buying-program/ (Eastrise was formerly VSECU).
+- `search.py`: Playwright scraper, run as a pytest test (`test_scrape_prices`), one run per zip code. Source: https://www.eastrise.com/personal/fuel-buying-program/ (Eastrise was formerly VSECU).
 - `irving_oil_prices.csv`, `oil_prices_by_dealer.csv`: data. GitHub Actions (`.github/workflows/run.yml`) appends to these and commits to `main` daily. Don't edit them by hand, and branch from the latest `main` to avoid CSV conflicts.
 - `notify.py`: daily ntfy phone notification. `.github/workflows/notify.yml` sends a real notification on PRs that change it.
 - `of/`: the website, an Observable Framework project. Cloudflare Pages builds it from `of/` (only changes under `of/` trigger a build).
