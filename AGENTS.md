@@ -5,7 +5,6 @@ Notes for AI coding agents working in this repo. See README.md for what the proj
 ## How I like to work
 
 - **Use existing tools first.** Before building something, check for an open source tool that already does it and suggest that. I'd rather contribute to an existing project than start a new one.
-- **Do what's asked.** When I ask for a change or a PR, make it. Don't come back with a plan to approve first unless I ask for one or the request is unclear.
 - **Ask before outward-facing actions I didn't request**, such as closing issues, commenting, or merging. Once I say yes, do it without asking again.
 
 ## Keeping GitHub records accurate
