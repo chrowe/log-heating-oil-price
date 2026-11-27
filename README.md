@@ -27,7 +27,7 @@ pytest --browser=webkit search.py
 Run website (see `of/README.md`)
 ```
 cd of
-npm ci
+npm install
 npm run dev
 ```
 
