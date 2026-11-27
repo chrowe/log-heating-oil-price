@@ -13,22 +13,16 @@ import pytest
 
 
 url = 'https://www.eastrise.com/personal/fuel-buying-program/'
-
-
-    
-
 ZIP_CODES = ['05048', '05602']
 DEALER_CSV = 'oil_prices_by_dealer.csv'
 
 
 @pytest.mark.parametrize('zip_code', ZIP_CODES)
-def test_search_button_exists(page: Page, zip_code):
+def test_scrape_prices(page: Page, zip_code):
     page.goto(url)
 
-    # create a locator
+    # Fails early if the Eastrise page layout changes
     search_button = page.get_by_role("main", name="Main site content").get_by_role("button", name="Search")
-
-    # Expect an attribute "to be strictly equal" to the value.
     expect(search_button).to_have_attribute("type", "submit")
 
     page.get_by_label("Zip Code").fill(zip_code)

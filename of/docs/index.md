@@ -41,9 +41,9 @@
 </style>
 
 <div class="hero">
-  <h1>VSECU Oil Price</h1>
-  <h2>This is a log of the price of Irving Oil from VSECU</h2>
-  <a href="https://www.vsecu.com/personal/home-heating/fuel-buying-program" target="_blank">Source<span style="display: inline-block; margin-left: 0.25rem;">↗︎</span></a>
+  <h1>Eastrise Oil Price</h1>
+  <h2>This is a log of the price of Irving Oil from Eastrise (formerly VSECU)</h2>
+  <a href="https://www.eastrise.com/personal/fuel-buying-program/" target="_blank">Source<span style="display: inline-block; margin-left: 0.25rem;">↗︎</span></a>
 </div>
 
 <div class="grid grid-cols-4">

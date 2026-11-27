@@ -1,9 +1,9 @@
 # log-heating-oil-price
 
-The oval goal is to get some data from the web, visualize it the web, and keep the data up to date.
+The overall goal is to get some data from the web, visualize it on the web, and keep the data up to date.
 
 This repo does 3 things
-1. Gets Irving VSECU heating oil prices and stores them in a csv.
+1. Gets Irving heating oil prices from the [Eastrise (formerly VSECU) fuel buying program](https://www.eastrise.com/personal/fuel-buying-program/) and stores them in a csv.
 2. Generates a website to visualize the data: an [Observable Framework](https://observablehq.com/framework) project in `of/`, hosted on Cloudflare Pages at https://log-heating-oil-price.pages.dev/
 3. Automates this process to get new data daily
 
@@ -60,10 +60,10 @@ Data is updated via Github actions. See `.github/workflows/run.yml`
 ### Website
 Cloudflare Pages builds and hosts the site from `of/`.
 
-## Rational for my approach
+## Rationale for my original approach
 1. I like Github pages because it is free, doesn't require another account to set up, deployment is simple/automatic and just hosts static files so is very stable.
 2. I wanted a project to learn more Python so I focused on solutions that use Python.
-3. After exploring various Python dashboarding tools like Dash, Streamlit, and Voila I decided I liked Panels the best. Not sure I can pin down why.
+3. After exploring various Python dashboarding tools like Dash, Streamlit, and Voila I decided I liked Panel the best. Not sure I can pin down why.
 4. I wanted an excuse to try running Python in the browser to see how well it worked.
 
 ### Why I moved away from that
