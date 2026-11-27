@@ -30,6 +30,24 @@ I want issues and PRs to say exactly what happened.
 - **Update descriptions when things change.** If a PR's scope changes, or an issue item is done or no longer applies, edit the description so it stays accurate.
 - **Issue style:** short sections (Problem, Fix or Options, How to test, Done when), checklists for multi-part work, and links to the related issues. "How to test" is required: say how to check the change works, such as the commands to run or what to look for on the Cloudflare preview.
 
+## Issue status
+
+Use GitHub's issue statuses ([announcement](https://github.blog/changelog/2026-11-23-issue-statuses-and-repository-boards-are-in-public-preview/)) to show where each issue is:
+
+| Status | When |
+|---|---|
+| Backlog | New issues and ideas we haven't decided to do |
+| Todo | We've decided to work on it (how we decide is still to be worked out) |
+| In progress | Work has started: a draft PR is open |
+| In review | The PR is ready for review |
+| Done | The PR is merged |
+| Not planned | We decided not to do it. Close with reason "not planned" and a comment saying why |
+| Duplicate | Another issue covers it. Close with reason "duplicate" and link the other issue |
+
+- **Let GitHub's automation do the moves where it can.** Linking a draft PR to an issue moves it to In progress, and marking the PR ready for review (or linking an open PR) moves it to In review. So open PRs as drafts while working, and mark them ready when the work and checks are done.
+- **"Part of #N" doesn't link a PR to the issue**, so it won't move the status. For partial work, set the status by hand or link the PR from the issue's Development sidebar.
+- **If a status didn't change as expected, or your tools can't set it, say so** and ask me to set it, rather than leaving it wrong.
+
 ## Repo layout
 
 - `search.py`: Playwright scraper, run as a pytest test (`test_search_button_exists`), one run per zip code. Source: https://www.eastrise.com/personal/fuel-buying-program/ (Eastrise was formerly VSECU).
