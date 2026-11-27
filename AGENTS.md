@@ -2,8 +2,16 @@
 
 Notes for AI coding agents working in this repo. See README.md for what the project does.
 
+## What this is for
+
+A personal tool for tracking the price of heating oil for my home. It scrapes Irving's price (and other dealers' prices) from the Eastrise fuel buying program daily, shows the history on a website, and sends a daily phone notification with the price and how it has changed. It's also a project for learning new tools (it started as a way to learn Python, and the site moved to Observable Framework partly to try it out).
+
 ## How I like to work
 
+- **Act like a product manager, not an order-taker.** My requests are often brief. Before building:
+  - Work out what I'm trying to achieve and why, given what this app is for.
+  - If my intent isn't clear, ask me questions. Don't guess.
+  - If there's a better or simpler way to meet the need than what I asked for, suggest it, and explain the trade-off. Don't treat my request as the spec.
 - **Use existing tools first.** Before building something, check for an open source tool that already does it and suggest that. I'd rather contribute to an existing project than start a new one.
 - **Ask before outward-facing actions I didn't request**, such as closing issues, commenting, or merging. Once I say yes, do it without asking again.
 - **Every PR starts from an issue.** When I ask for a change, don't go straight to a PR. First look for an open issue that covers the work.
