@@ -22,7 +22,7 @@ A personal tool for buying heating oil at the best price. Every day it scrapes d
 - **In chat, link issues and PRs with their titles.** Write [#41 Roadmap: order of work](https://github.com/chrowe/log-heating-oil-price/issues/41), not a bare "#41". On GitHub, a bare `#41` is fine, because GitHub links it and shows a preview on hover.
 - **Check the roadmap for priorities.** [#41](https://github.com/chrowe/log-heating-oil-price/issues/41) sets the order of work. Fetch the current list of open issues before suggesting new ones, since issues are often added between sessions.
 - **Every PR starts from an issue.** When I ask for a change, don't go straight to a PR. First look for an open issue that covers the work.
-  - If there is one, check it says what will be done and how to test it, and suggest updates if it doesn't.
+  - If there is one, check it says what will be done and has a "Done when" section whose items can each be checked. Suggest updates if it doesn't.
   - If there isn't one, recommend creating one, with a draft I can approve, before writing code.
   - The PR then links the issue ("Closes #N" or "Part of #N").
 
@@ -35,7 +35,7 @@ I want issues and PRs to say exactly what happened.
 - **Reference related issues.** Besides the issue a PR is for, link other open issues the change touches.
 - **Close superseded PRs** with a short comment saying what replaced them.
 - **Update descriptions when things change.** If a PR's scope changes, or an issue item is done or no longer applies, edit the description so it stays accurate.
-- **Issue style:** short sections (Problem, Fix or Options, How to test, Done when), checklists for multi-part work, and links to the related issues. "How to test" is required: say how to check the change works, such as the commands to run or what to look for on the Cloudflare preview.
+- **Issue style:** short sections (Problem or Why, Fix or Idea, Done when), checklists for multi-part work, and links to the related issues. "Done when" is required, and each item must say how to check it. For example, "With a CSV whose last row is old, the site shows the banner", not "Stale data is handled". Don't add a separate "How to test" section. Generic checks are in "Checks before pushing" below.
 
 ## Issue status
 
