@@ -1,4 +1,2 @@
 1. Playwright has versions for multiple languages. When you are looking at their docs make sure it says Python at the top (especially important when Googling)
-2. I have a Conda environment will all my python dependencies. I can share if you want.
-3. The requirements.txt is just being used for Github Actions so only contains what is needed to do the web scraping
-4. 
+2. Python dependencies are managed with [uv](https://docs.astral.sh/uv/) in `pyproject.toml` and `uv.lock`. Run `uv sync` to install them. They only cover the scraper and the notifier; the website's dependencies are in `of/package.json`.

@@ -5,7 +5,7 @@ Published to https://log-heating-oil-price.pages.dev/ by Cloudflare Pages, which
 This is an [Observable Framework](https://observablehq.com/framework) project. To start the local preview server, run:
 
 ```
-npm install
+npm ci
 npm run dev
 ```
 
