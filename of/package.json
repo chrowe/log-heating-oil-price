@@ -5,7 +5,6 @@
     "clean": "rimraf docs/.observablehq/cache",
     "build": "rimraf dist && observable build",
     "dev": "observable preview",
-    "deploy": "observable deploy",
     "observable": "observable"
   },
   "dependencies": {

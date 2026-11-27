@@ -24,7 +24,7 @@ import urllib.request
 from datetime import date, timedelta
 
 CSV_FILE = 'irving_oil_prices.csv'
-DEFAULT_SITE_URL = 'https://wri-chrowe.observablehq.cloud/oil-prices/'
+DEFAULT_SITE_URL = 'https://log-heating-oil-price.pages.dev/'
 PERIODS = [(1, '1 day'), (7, '7 days'), (30, '30 days')]
 
 
