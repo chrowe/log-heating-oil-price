@@ -65,4 +65,8 @@ Cloudflare Pages builds and hosts the site from `of/`.
 2. I wanted a project to learn more Python so I focused on solutions that use Python.
 3. After exploring various Python dashboarding tools like Dash, Streamlit, and Voila I decided I liked Panels the best. Not sure I can pin down why.
 4. I wanted an excuse to try running Python in the browser to see how well it worked.
-5. The site has since moved from Panel on Github Pages to Observable Framework on Cloudflare Pages.
+
+### Why I moved away from that
+The site has since moved from Panel on Github Pages to Observable Framework on Cloudflare Pages.
+1. Python is too slow, and I wanted to try out Observable Framework.
+2. Github Pages only allows one environment and I wanted to be able to test out branches live.
