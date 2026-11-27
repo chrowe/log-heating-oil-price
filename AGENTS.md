@@ -6,6 +6,10 @@ Notes for AI coding agents working in this repo. See README.md for what the proj
 
 - **Use existing tools first.** Before building something, check for an open source tool that already does it and suggest that. I'd rather contribute to an existing project than start a new one.
 - **Ask before outward-facing actions I didn't request**, such as closing issues, commenting, or merging. Once I say yes, do it without asking again.
+- **Every PR starts from an issue.** When I ask for a change, don't go straight to a PR. First look for an open issue that covers the work.
+  - If there is one, check it says what will be done and how to test it, and suggest updates if it doesn't.
+  - If there isn't one, recommend creating one, with a draft I can approve, before writing code.
+  - The PR then links the issue ("Closes #N" or "Part of #N").
 
 ## Keeping GitHub records accurate
 
@@ -13,10 +17,10 @@ I want issues and PRs to say exactly what happened.
 
 - **Closing keywords only when true.** Put "Closes #N" in a PR description only if merging that PR fully resolves #N and #N is still open. If it does part of the work, write "Part of #N". If the issue is already closed, just link it.
 - **Keywords only work in two places**: a PR description when the PR is merged into `main`, and commit messages that land on `main`. Comments never close issues, and editing a merged PR's description doesn't either. If a merged PR finished an issue but didn't reference it, close the issue by hand with a comment that links the PR(s).
-- **Check related issues before opening a PR.** Read the open issues and reference the ones the change touches.
+- **Reference related issues.** Besides the issue a PR is for, link other open issues the change touches.
 - **Close superseded PRs** with a short comment saying what replaced them.
 - **Update descriptions when things change.** If a PR's scope changes, or an issue item is done or no longer applies, edit the description so it stays accurate.
-- **Issue style:** short sections (Problem, Fix or Options, Done when), checklists for multi-part work, and links to the related issues.
+- **Issue style:** short sections (Problem, Fix or Options, How to test, Done when), checklists for multi-part work, and links to the related issues. "How to test" is required: say how to check the change works, such as the commands to run or what to look for on the Cloudflare preview.
 
 ## Repo layout
 
