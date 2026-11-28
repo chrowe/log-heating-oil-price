@@ -162,9 +162,10 @@ def json_prices(today, pytestconfig):
 def scrape_with_playwright(page: Page, zip_code, today):
     page.goto(url)
 
-    # Fails early if the Eastrise page layout changes
+    # Fails early if the Eastrise page layout changes. The page sometimes takes
+    # longer than Playwright's 5-second default to load (#48), so wait longer here.
     search_button = page.get_by_role("main", name="Main site content").get_by_role("button", name="Search")
-    expect(search_button).to_have_attribute("type", "submit")
+    expect(search_button).to_have_attribute("type", "submit", timeout=30_000)
 
     page.get_by_label("Zip Code").fill(zip_code)
 
@@ -202,12 +203,16 @@ def test_scrape_prices(request, json_prices, today, zip_code):
     print(rows)
     assert rows, f"no oil prices found for {zip_code}"
 
+    # Check before writing anything, so a failed test that gets rerun
+    # (--reruns in run.yml) doesn't leave half-written rows behind.
+    if zip_code == ZIP_CODES[0]:
+        irving = [r for r in rows if r[2] == 'Irving Oil']
+        assert irving, "Irving Oil not listed"
+
     with open(DEALER_CSV, 'a', newline='') as f_object:
         writer(f_object).writerows(rows)
 
     # Keep the original Irving series (home zip code) going
     if zip_code == ZIP_CODES[0]:
-        irving = [r for r in rows if r[2] == 'Irving Oil']
-        assert irving, "Irving Oil not listed"
         with open('irving_oil_prices.csv', 'a') as f_object:
             writer(f_object).writerow([today, irving[0][4]])

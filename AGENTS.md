@@ -20,7 +20,7 @@ A personal tool for buying heating oil at the best price. Every day it scrapes d
 - **Use existing tools first.** Before building something, check for an open source tool that already does it and suggest that. I'd rather contribute to an existing project than start a new one.
 - **Ask before outward-facing actions I didn't request**, such as closing issues, commenting, or merging. Once I say yes, do it without asking again.
 - **In chat, link issues and PRs with their titles.** Write [#41 Roadmap: order of work](https://github.com/chrowe/log-heating-oil-price/issues/41), not a bare "#41". On GitHub, a bare `#41` is fine, because GitHub links it and shows a preview on hover.
-- **Check the roadmap for priorities.** [#41](https://github.com/chrowe/log-heating-oil-price/issues/41) sets the order of work. Fetch the current list of open issues before suggesting new ones, since issues are often added between sessions.
+- **Check the roadmap for priorities.** [issue #41](https://github.com/chrowe/log-heating-oil-price/issues/41) sets the order of work. Fetch the current list of open issues before suggesting new ones, since issues are often added between sessions.
 - **Every PR starts from an issue.** When I ask for a change, don't go straight to a PR. First look for an open issue that covers the work.
   - If there is one, check it says what will be done and has a "Done when" section whose items can each be checked. Suggest updates if it doesn't.
   - If there isn't one, recommend creating one, with a draft I can approve, before writing code.
@@ -32,6 +32,7 @@ I want issues and PRs to say exactly what happened.
 
 - **Closing keywords only when true.** Put "Closes #N" in a PR description only if merging that PR fully resolves #N and #N is still open. If it does part of the work, write "Part of #N". If the issue is already closed, just link it.
 - **Keywords only work in two places**: a PR description when the PR is merged into `main`, and commit messages that land on `main`. Comments never close issues, and editing a merged PR's description doesn't either. If a merged PR finished an issue but didn't reference it, close the issue by hand with a comment that links the PR(s).
+- **Say whether a number is a PR or an issue.** In repo files like this one, write `PR #N` or `issue #N`, not a bare `#N`. GitHub numbers issues and PRs from one sequence, so a bare number doesn't say which it is.
 - **Reference related issues.** Besides the issue a PR is for, link other open issues the change touches.
 - **Close superseded PRs** with a short comment saying what replaced them.
 - **Update descriptions when things change.** If a PR's scope changes, or an issue item is done or no longer applies, edit the description so it stays accurate.
@@ -44,7 +45,7 @@ Use GitHub's issue statuses ([announcement](https://github.blog/changelog/2026-1
 | Status | When |
 |---|---|
 | Backlog | New issues and ideas we haven't decided to do |
-| Todo | We've decided to work on it (how we decide is still to be worked out) |
+| Todo | Chosen at a planning check-in (a comment on issue #41) and added to that batch's milestone, named "Batch N" (e.g. Batch 1). See "How we pick what's next" in issue #41 |
 | In progress | Work has started: a draft PR is open |
 | In review | The PR is ready for review |
 | Done | The PR is merged |
@@ -63,13 +64,13 @@ Use GitHub's issue statuses ([announcement](https://github.blog/changelog/2026-1
   - `SCRAPE_SOURCE=json` or `SCRAPE_SOURCE=playwright` forces one path, e.g. to compare them.
 - `irving_oil_prices.csv`, `oil_prices_by_dealer.csv`, `scrape_log.csv`: data. GitHub Actions (`.github/workflows/run.yml`) appends to these and commits to `main` daily. `scrape_log.csv` has one line per run (`date,source,detail`): whether prices came from `json` or `playwright` and, for a fallback, why. Don't edit them by hand, and branch from the latest `main` to avoid CSV conflicts.
 - `notify.py`: daily ntfy phone notification. `.github/workflows/notify.yml` sends a real notification on PRs that change it.
-- `.github/workflows/claude-code-review.yml`: Claude reviews every non-draft PR and posts inline comments. Treat its findings like any other review: fix them or reply explaining why not. `.github/workflows/claude.yml` answers `@claude` mentions in issues and PRs. Both use the `CLAUDE_CODE_OAUTH_TOKEN` repo secret (#44).
+- `.github/workflows/claude-code-review.yml`: Claude reviews every non-draft PR from a branch in this repo and posts inline comments. It skips PRs from forks and from Dependabot, which don't get the repo secret below. Treat its findings like any other review: fix them or reply explaining why not. It also skips PRs that change `claude-code-review.yml` itself, because the action only runs when that file matches `main`. If your PR edits it, tell Chris in the PR description and in chat that it needs a manual review. `.github/workflows/claude.yml` answers `@claude` mentions in issues and PRs. Both use the `CLAUDE_CODE_OAUTH_TOKEN` repo secret (issue #44).
 - `of/`: the website, an Observable Framework project. Cloudflare Pages builds it from `of/` (only changes under `of/` trigger a build).
   - Production: https://log-heating-oil-price.pages.dev/
   - Every branch gets a preview at `https://<branch-name-with-slashes-as-dashes>.log-heating-oil-price.pages.dev/`.
   - The page loads its data from the CSV on `main` (raw.githubusercontent.com), so previews always show `main`'s data.
-- The old Panel/Pyodide site and GitHub Pages hosting are gone (#28). Don't bring them back.
-- `run.yml` is pinned to `ubuntu-24.04` because the locked Playwright can't install webkit on newer Ubuntu (#20).
+- The old Panel/Pyodide site and GitHub Pages hosting are gone (PR #28). Don't bring them back.
+- `run.yml` is pinned to `ubuntu-24.04` because the locked Playwright can't install webkit on newer Ubuntu (issue #20).
 
 ## Tooling
 

@@ -1,6 +1,6 @@
 name: Claude Code Review
 
-# Reviews each PR automatically and posts inline comments (#44).
+# Reviews each PR automatically and posts inline comments (issue #44).
 # Based on the review example in https://code.claude.com/docs/en/github-actions
 # Drafts are skipped, so the review runs when a PR is marked ready for review.
 
@@ -15,6 +15,9 @@ concurrency:
 
 jobs:
   review:
+    # Fork and Dependabot PRs don't get the CLAUDE_CODE_OAUTH_TOKEN secret, so the
+    # review would fail on them. Skip them instead; a skipped job shows grey, not red (issue #47).
+    if: github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
