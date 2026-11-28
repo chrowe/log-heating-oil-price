@@ -1,9 +1,20 @@
 name: Run script
 
 on:
+  # The daily run is started at 19:04 UTC by the Cloudflare Worker in
+  # scheduler/ (issue #51), because GitHub runs schedules hours late. This
+  # schedule is only a backup in case the Worker fails. It is set 30 minutes
+  # after the Worker so it never runs first, and early enough that GitHub's
+  # usual delay rarely pushes it past midnight Eastern.
   schedule:
-    - cron: '34 17 * * *'
+    - cron: '34 19 * * *'
   workflow_dispatch:
+
+# A Worker-started run and the backup run can't overlap and race to push
+# (issue #17).
+concurrency:
+  group: scrape
+  cancel-in-progress: false
 
 jobs:
   run:
@@ -40,6 +51,8 @@ jobs:
         git config --global user.name "Github Actions"
         git add irving_oil_prices.csv oil_prices_by_dealer.csv scrape_log.csv
         git commit -m "Github actions run"
+        # main may have moved during the run (a merge, or another run).
+        git pull --rebase
         git push
     - name: Send ntfy notification
       if: ${{ env.NTFY_TOPIC != '' }}

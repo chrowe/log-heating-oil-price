@@ -57,6 +57,8 @@ python notify.py --dry-run
 ### Data
 Data is updated via Github actions. See `.github/workflows/run.yml`
 
+The daily run is started at 19:04 UTC by a Cloudflare Worker in `scheduler/`, because GitHub's own schedule runs hours late. GitHub's schedule is kept as a backup. Setup, the GitHub token it uses, and when that token expires: see [`scheduler/README.md`](scheduler/README.md).
+
 ### Website
 Cloudflare Pages builds and hosts the site from `of/`.
 
