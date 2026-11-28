@@ -57,7 +57,8 @@ jobs:
         git config --global user.email "chris.rowe@wri.org"
         git config --global user.name "Github Actions"
         git add irving_oil_prices.csv oil_prices_by_dealer.csv scrape_log.csv
-        git commit -m "Github actions run"
+        # A rerun on the same day can leave the data unchanged (#15).
+        git diff --cached --quiet || git commit -m "Github actions run"
         git push
     - name: Send ntfy notification
       if: ${{ env.NTFY_TOPIC != '' }}

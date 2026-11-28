@@ -35,7 +35,7 @@ jobs:
         # --locked fails if uv.lock is out of date with pyproject.toml (uv lock --check).
         run: uv sync --locked
       - name: Unit tests
-        run: uv run pytest -v test_search.py
+        run: uv run pytest -v test_search.py test_notify.py
       - name: Scraper collects both zip codes
         # Catches syntax and import errors in search.py without scraping.
         run: |
