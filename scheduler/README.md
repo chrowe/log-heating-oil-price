@@ -2,7 +2,7 @@
 
 A Cloudflare Worker that starts the daily scrape (`.github/workflows/run.yml`) at **19:04 UTC** every day (issue #51).
 
-GitHub's own `schedule` trigger runs hours late on free runners, which made the capture time unpredictable and pushed runs past midnight. A `workflow_dispatch` call through GitHub's API starts a run within seconds, so this Worker makes that call on a Cloudflare Cron Trigger, which fires on time. The `schedule` in `run.yml` stays as a backup for days the Worker fails.
+GitHub's own `schedule` trigger runs hours late on free runners, which made the capture time unpredictable and pushed runs past midnight. A `workflow_dispatch` call through GitHub's API starts a run within seconds, so this Worker makes that call on a Cloudflare Cron Trigger, which fires on time. The `schedule` in `run.yml` stays as a backup for days the Worker fails: it skips itself if a `workflow_dispatch` run already succeeded in the last 20 hours, so a normal day gets one scrape and one notification.
 
 - `src/index.js`: sends `POST /repos/chrowe/log-heating-oil-price/actions/workflows/run.yml/dispatches` with `{"ref":"main"}`. It retries twice, 30 seconds apart, unless GitHub rejects the token.
 - `wrangler.toml`: the cron time (UTC) and repo settings. The Worker has no public URL.
