@@ -58,8 +58,11 @@ Use GitHub's issue statuses ([announcement](https://github.blog/changelog/2026-1
 
 ## Repo layout
 
-- `search.py`: Playwright scraper, run as a pytest test (`test_scrape_prices`), one run per zip code. Source: https://www.eastrise.com/personal/fuel-buying-program/ (Eastrise was formerly VSECU).
-- `irving_oil_prices.csv`, `oil_prices_by_dealer.csv`: data. GitHub Actions (`.github/workflows/run.yml`) appends to these and commits to `main` daily. Don't edit them by hand, and branch from the latest `main` to avoid CSV conflicts.
+- `search.py`: scraper, run as a pytest test (`test_scrape_prices`), one run per zip code. Source: https://www.eastrise.com/personal/fuel-buying-program/ (Eastrise was formerly VSECU).
+  - JSON first (#50): it downloads the page once with `urllib` and parses the dealer JSON the page embeds (`var vsecuVheatDealers = [...]`). It checks the result (every zip has oil prices, Irving is listed for 05048, prices are $1–$15) before trusting it.
+  - Playwright fallback: if the JSON step fails, the run drives the page with Playwright as before, prints a `::warning::` with the reason, and `notify.py` adds a line about it to that day's notification.
+  - `SCRAPE_SOURCE=json` or `SCRAPE_SOURCE=playwright` forces one path, e.g. to compare them.
+- `irving_oil_prices.csv`, `oil_prices_by_dealer.csv`, `scrape_log.csv`: data. GitHub Actions (`.github/workflows/run.yml`) appends to these and commits to `main` daily. `scrape_log.csv` has one line per run (`date,source,detail`): whether prices came from `json` or `playwright` and, for a fallback, why. Don't edit them by hand, and branch from the latest `main` to avoid CSV conflicts.
 - `notify.py`: daily ntfy phone notification. `.github/workflows/notify.yml` sends a real notification on PRs that change it.
 - `.github/workflows/claude-code-review.yml`: Claude reviews every non-draft PR from a branch in this repo and posts inline comments. It skips PRs from forks and from Dependabot, which don't get the repo secret below. Treat its findings like any other review: fix them or reply explaining why not. It also skips PRs that change `claude-code-review.yml` itself, because the action only runs when that file matches `main`. If your PR edits it, tell Chris in the PR description and in chat that it needs a manual review. `.github/workflows/claude.yml` answers `@claude` mentions in issues and PRs. Both use the `CLAUDE_CODE_OAUTH_TOKEN` repo secret (issue #44).
 - `of/`: the website, an Observable Framework project. Cloudflare Pages builds it from `of/` (only changes under `of/` trigger a build).
@@ -76,6 +79,6 @@ Use GitHub's issue statuses ([announcement](https://github.blog/changelog/2026-1
 
 ## Checks before pushing
 
-- Python changes: `uv lock --check` and `uv run pytest --collect-only -q search.py`. A real scrape needs `playwright install webkit` and hits the live site, so only run it when the scraper changes.
+- Python changes: `uv lock --check` and `uv run pytest --collect-only -q search.py`. A real scrape hits the live site, so only run it when the scraper changes. The JSON path needs no browser; testing the fallback (`SCRAPE_SOURCE=playwright`) needs `playwright install webkit`.
 - Notifier changes: `python3 notify.py --dry-run`.
 - Website changes: `cd of && npm ci && npm run build`, with no warnings. Then check the Cloudflare preview for the PR.

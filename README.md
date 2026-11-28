@@ -9,7 +9,7 @@ This repo does 3 things
 
 
 ## Dependencies
-* [Playwright](https://playwright.dev/python/) to get the data.
+* The dealer JSON embedded in the Eastrise page to get the data, with [Playwright](https://playwright.dev/python/) as a fallback.
 * [Observable Framework](https://observablehq.com/framework) to generate the website, hosted on [Cloudflare Pages](https://pages.cloudflare.com/).
 * Github Actions to get new data.
 * [act](https://github.com/nektos/act) for testing Github Action locally.
