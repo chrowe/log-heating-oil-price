@@ -153,7 +153,9 @@ def json_prices(today, pytestconfig):
         # pytest captures output, which would hide the warning from Actions.
         capture = pytestconfig.pluginmanager.getplugin('capturemanager')
         with capture.global_and_fixture_disabled():
-            print(f'::warning::Falling back to Playwright (JSON: {e})', flush=True)
+            # Start a new line: pytest has already printed "search.py " on this one,
+            # and Actions only reads ::warning:: at the start of a line.
+            print(f'\n::warning::Falling back to Playwright (JSON: {e})', flush=True)
         return None
     log_source(today, 'json')
     return rows_by_zip
