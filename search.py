@@ -21,7 +21,7 @@ Set SCRAPE_SOURCE to force one path:
 from playwright.sync_api import Page, expect
 from datetime import date, datetime
 from zoneinfo import ZoneInfo
-from csv import writer
+from csv import reader, writer
 import json
 import os
 import time
@@ -32,6 +32,7 @@ import pytest
 url = 'https://www.eastrise.com/personal/fuel-buying-program/'
 ZIP_CODES = ['05048', '05602']
 DEALER_CSV = 'oil_prices_by_dealer.csv'
+IRVING_CSV = 'irving_oil_prices.csv'
 SCRAPE_LOG = 'scrape_log.csv'
 JSON_VAR = 'vsecuVheatDealers'
 # Prices outside this range mean the JSON is wrong, not that oil is that price.
@@ -128,6 +129,44 @@ def json_rows():
     return rows_by_zip
 
 
+def save_rows(path, new_rows, replace, key):
+    """Write `new_rows` to the CSV at `path` so each day has one set of rows (#15).
+
+    Existing rows for which `replace(row)` is true are dropped first, so a second
+    run on the same day replaces that day's rows instead of adding more. Then
+    rows with the same `key(row)` are collapsed to the last one written, which
+    also cleans up duplicates left by older runs, and rows are put in date order.
+    Values from the file are kept as written (e.g. "2.5600" stays as is).
+    """
+    with open(path, newline='') as f:
+        header, *rows = list(reader(f))
+    rows = [r for r in rows if r and not replace(r)]
+    rows += [[str(v) for v in r] for r in new_rows]
+    latest = {}
+    for r in rows:
+        latest.pop(key(r), None)  # re-insert, so the last one written wins
+        latest[key(r)] = r
+    rows = sorted(latest.values(), key=lambda r: r[0])  # stable: same-day order kept
+    tmp = f'{path}.tmp'
+    with open(tmp, 'w', newline='') as f:
+        writer(f).writerows([header] + rows)
+    os.replace(tmp, path)
+
+
+def save_dealer_rows(rows, day, zip_code, path=DEALER_CSV):
+    """Replace this zip code's rows for `day` in the dealer CSV."""
+    save_rows(path, rows,
+              replace=lambda r: r[0] == day and r[1] == zip_code,
+              key=lambda r: tuple(r[:4]))  # date, zip, dealer, gallons
+
+
+def save_irving_price(day, price, path=IRVING_CSV):
+    """Replace the Irving price for `day`."""
+    save_rows(path, [[day, price]],
+              replace=lambda r: r[0] == day,
+              key=lambda r: r[0])
+
+
 def log_source(day, source, detail=''):
     new = not os.path.exists(SCRAPE_LOG)
     with open(SCRAPE_LOG, 'a', newline='') as f:
@@ -209,10 +248,9 @@ def test_scrape_prices(request, json_prices, today, zip_code):
         irving = [r for r in rows if r[2] == 'Irving Oil']
         assert irving, "Irving Oil not listed"
 
-    with open(DEALER_CSV, 'a', newline='') as f_object:
-        writer(f_object).writerows(rows)
+    # A second run on the same day replaces that day's rows (#15).
+    save_dealer_rows(rows, today, zip_code)
 
     # Keep the original Irving series (home zip code) going
     if zip_code == ZIP_CODES[0]:
-        with open('irving_oil_prices.csv', 'a') as f_object:
-            writer(f_object).writerow([today, irving[0][4]])
+        save_irving_price(today, irving[0][4])
