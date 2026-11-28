@@ -1,0 +1,28 @@
+# Weekly dependency updates, grouped so each ecosystem opens at most one PR a
+# week (issue #49). The PR checks workflow tests them; Dependabot PRs get no
+# Claude review (issue #47).
+version: 2
+updates:
+  - package-ecosystem: uv
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      python:
+        patterns: ["*"]
+
+  - package-ecosystem: npm
+    directory: /of
+    schedule:
+      interval: weekly
+    groups:
+      website:
+        patterns: ["*"]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ["*"]
