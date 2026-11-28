@@ -1,0 +1,69 @@
+name: PR checks
+
+# Tests every PR, including Dependabot's, which get no Claude review (issue #49).
+# Runs the checks from AGENTS.md. The real scrape is left out on purpose: it hits
+# the live Eastrise site and appends to the CSVs, so it stays in run.yml.
+# Tests live here, not in run.yml, so a failing test can't block a day's scrape.
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+# A new push cancels checks still running for the same PR.
+concurrency:
+  group: pr-checks-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  python:
+    name: Python tests
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          # Same uv as run.yml, so this tests what the daily scrape uses.
+          version: "0.6.14"
+          enable-cache: true
+      - name: Set up Python
+        run: uv python install
+      - name: Install the project
+        # --locked fails if uv.lock is out of date with pyproject.toml (uv lock --check).
+        run: uv sync --locked
+      - name: Unit tests
+        run: uv run pytest -v test_search.py
+      - name: Scraper collects both zip codes
+        # Catches syntax and import errors in search.py without scraping.
+        run: |
+          uv run pytest --collect-only -q search.py | tee collect.txt
+          grep -q "test_scrape_prices\[05048\]" collect.txt
+          grep -q "test_scrape_prices\[05602\]" collect.txt
+
+  notifier:
+    name: Notifier dry run
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+      - name: Preview message
+        run: python3 notify.py --dry-run
+
+  website:
+    name: Website build
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: of
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          # Cloudflare Pages builds with Node 22.
+          node-version: 22
+          cache: npm
+          cache-dependency-path: of/package-lock.json
+      - run: npm ci
+      - run: npm run build
