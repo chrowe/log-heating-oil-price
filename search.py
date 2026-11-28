@@ -19,7 +19,8 @@ Set SCRAPE_SOURCE to force one path:
 """
 
 from playwright.sync_api import Page, expect
-from datetime import date
+from datetime import date, datetime
+from zoneinfo import ZoneInfo
 from csv import writer
 import json
 import os
@@ -36,6 +37,13 @@ JSON_VAR = 'vsecuVheatDealers'
 # Prices outside this range mean the JSON is wrong, not that oil is that price.
 PRICE_RANGE = (1.0, 15.0)
 DOWNLOAD_ATTEMPTS = 3
+# Rows are dated by the dealers' local day, not the runner's UTC day (#14).
+LOCAL_TZ = ZoneInfo('America/New_York')
+
+
+def local_today(now: datetime | None = None) -> date:
+    """Today's date in Vermont. Pass an aware `now` to fix the clock in tests."""
+    return (now or datetime.now(LOCAL_TZ)).astimezone(LOCAL_TZ).date()
 
 
 class JsonError(Exception):
@@ -45,7 +53,7 @@ class JsonError(Exception):
 @pytest.fixture(scope='session')
 def today():
     """The date for every row and log line in this run (both paths)."""
-    return date.today().strftime('%Y-%m-%d')
+    return local_today().isoformat()
 
 
 def download_page():
