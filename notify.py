@@ -32,10 +32,14 @@ PERIODS = [(1, '1 day'), (7, '7 days'), (30, '30 days')]
 
 
 def read_prices(path=CSV_FILE):
+    """(date, price) rows in date order, one per date.
+
+    If a date appears more than once, the last row written for it wins (#15).
+    """
     with open(path, newline='') as f:
-        rows = [(date.fromisoformat(r['date']), float(r['price']))
-                for r in csv.DictReader(f) if r.get('price')]
-    return sorted(rows)
+        by_date = {date.fromisoformat(r['date']): float(r['price'])
+                   for r in csv.DictReader(f) if r.get('price')}
+    return sorted(by_date.items())
 
 
 def fallback_note(latest_day, path=SCRAPE_LOG):

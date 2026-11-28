@@ -39,18 +39,37 @@ jobs:
       run: uv python install
     - name: Install the project
       run: uv sync
+    - name: Scrape from page JSON
+      # Most days the page JSON works and no browser is needed (issue #56).
+      # SCRAPE_SOURCE=json fails instead of falling back, and writes nothing
+      # when it fails, so the fallback step below starts clean.
+      id: json
+      continue-on-error: true
+      env:
+        SCRAPE_SOURCE: json
+      run: uv run pytest search.py
     - name: Setup playwright
+      if: steps.json.outcome == 'failure'
       run: |
+        echo "::warning::JSON step failed, installing webkit for the Playwright fallback"
         uv run playwright install --with-deps webkit
-    - name: Run script
-      # Retry a failed zip code (e.g. a slow page load, #48) before giving up.
-      run: uv run pytest --browser=webkit --reruns 2 --reruns-delay 30 search.py
+    - name: Scrape with Playwright fallback
+      # Same run as before issue #56: it tries the JSON again, and if that
+      # still fails it logs why in scrape_log.csv, prints a ::warning:: and
+      # scrapes with Playwright. Retry a failed zip code (e.g. a slow page
+      # load, #48) before giving up.
+      if: steps.json.outcome == 'failure'
+      run: |
+        # Drop anything the JSON step wrote, so no row is written twice (#15).
+        git checkout -- irving_oil_prices.csv oil_prices_by_dealer.csv scrape_log.csv
+        uv run pytest --browser=webkit --reruns 2 --reruns-delay 30 search.py
     - name: Commit the update
       run: |
         git config --global user.email "chris.rowe@wri.org"
         git config --global user.name "Github Actions"
         git add irving_oil_prices.csv oil_prices_by_dealer.csv scrape_log.csv
-        git commit -m "Github actions run"
+        # A rerun on the same day can leave the data unchanged (#15).
+        git diff --cached --quiet || git commit -m "Github actions run"
         # main may have moved during the run (a merge, or another run).
         git pull --rebase
         git push

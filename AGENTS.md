@@ -71,6 +71,7 @@ Use GitHub's issue statuses ([announcement](https://github.blog/changelog/2026-1
   - Every branch gets a preview at `https://<branch-name-with-slashes-as-dashes>.log-heating-oil-price.pages.dev/`.
   - The page loads its data from the CSV on `main` (raw.githubusercontent.com), so previews always show `main`'s data.
 - The old Panel/Pyodide site and GitHub Pages hosting are gone (PR #28). Don't bring them back.
+- `run.yml` installs webkit only when it's needed (issue #56). It first runs the scrape with `SCRAPE_SOURCE=json`, which needs no browser. Only if that step fails does it install webkit, reset the data CSVs, and run the normal scrape, which tries the JSON again and falls back to Playwright, logging why. So the `scrape_log.csv` reason comes from that second JSON attempt.
 - `run.yml` is pinned to `ubuntu-24.04` because the locked Playwright can't install webkit on newer Ubuntu (issue #20).
 
 ## Tooling
